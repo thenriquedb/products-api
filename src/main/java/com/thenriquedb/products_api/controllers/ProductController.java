@@ -49,13 +49,13 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid ProductRecordDto productRecordDto) {
-        try
+        try {
             var product = this.productService.updateProduct(id, productRecordDto);
             return ResponseEntity.ok(product);
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body("Product not found");
         }
     }
 
