@@ -36,7 +36,7 @@ public class ProductService {
         return products;
     }
 
-    public ProductModel getProductById(UUID id) {
+    public ProductModel getProductById(UUID id) throws ProductNotFoundExecption {
         Optional<ProductModel> product = productRepository.findById(id);
 
         if(product.isEmpty()) {
@@ -55,7 +55,7 @@ public class ProductService {
         return productRepository.save(productModel);
     }
 
-    public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto) {
+    public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto) throws ProductNotFoundExecption {
         Optional<ProductModel> product = this.productRepository.findById(id);
         if(product.isEmpty()) {
             throw new ProductNotFoundExecption(id);
@@ -67,7 +67,7 @@ public class ProductService {
         return productRepository.save(productModel);
     }
 
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(UUID id) throws ProductNotFoundExecption {
         Optional<ProductModel> product = productRepository.findById(id);
         if(product.isEmpty()) {
             throw new ProductNotFoundExecption(id);
