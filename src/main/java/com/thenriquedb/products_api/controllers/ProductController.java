@@ -35,39 +35,19 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable("id") UUID id) {
         ProductModel product = this.productService.getProductById(id);
-
-        if(product == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                     .body("Product not found");
-        }
-
-
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid ProductRecordDto productRecordDto) {
-        try {
-            var product = this.productService.updateProduct(id, productRecordDto);
-            return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Product not found");
-        }
+        var product = this.productService.updateProduct(id, productRecordDto);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable("id") UUID id) {
-        try {
-            this.productService.deleteProduct(id);
-            return ResponseEntity.ok("Product deleted");
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Product not found");
-        }
+        this.productService.deleteProduct(id);
+        return ResponseEntity.ok(String.format("Product with id %s deleted", id));
     }
 }
