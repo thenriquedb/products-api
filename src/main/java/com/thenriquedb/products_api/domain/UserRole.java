@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.models;
+package com.thenriquedb.products_api.domain;
 
 public enum UserRole {
     ADMIN("admin"),

@@ -2,14 +2,13 @@ package com.thenriquedb.products_api.services;
 
 
 import com.thenriquedb.products_api.execptions.UserAlreadyExistsException;
-import com.thenriquedb.products_api.models.UserModel;
-import com.thenriquedb.products_api.models.UserRole;
+import com.thenriquedb.products_api.domain.User;
+import com.thenriquedb.products_api.domain.UserRole;
 import com.thenriquedb.products_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,7 @@ public class AuthenticationService {
         var auth = authenticationManager.authenticate(usernamePassword);
     }
 
-    public UserModel register(String name, String login, String password, UserRole role) {
+    public User register(String name, String login, String password, UserRole role) {
         UserDetails user = userRepository.findByLogin(login);
 
         if (user != null) {
@@ -37,7 +36,7 @@ public class AuthenticationService {
         }
 
         String encryptedPassword = passwordEncoder.encode(password);
-        var newUser = new UserModel(
+        var newUser = new User(
                 name,
                 login,
                 encryptedPassword,

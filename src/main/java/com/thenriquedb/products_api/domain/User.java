@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.models;
+package com.thenriquedb.products_api.domain;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
-public class UserModel implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -22,10 +22,10 @@ public class UserModel implements UserDetails {
 
     private UserRole role;
 
-    public UserModel() {
+    public User() {
     }
 
-    public UserModel(String name, String login, String password, UserRole role) {
+    public User(String name, String login, String password, UserRole role) {
         this.name = name;
         this.login = login;
         this.password = password;

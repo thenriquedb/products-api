@@ -1,6 +1,6 @@
 package com.thenriquedb.products_api.dtos;
 
-import com.thenriquedb.products_api.models.UserRole;
+import com.thenriquedb.products_api.domain.UserRole;
 import jakarta.validation.constraints.NotEmpty ;
 import org.hibernate.validator.constraints.Length;
 

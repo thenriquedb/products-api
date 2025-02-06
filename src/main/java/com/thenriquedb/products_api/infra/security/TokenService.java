@@ -3,7 +3,7 @@ package com.thenriquedb.products_api.infra.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.thenriquedb.products_api.models.UserModel;
+import com.thenriquedb.products_api.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(UserModel userModel) {
+    public String generateToken(User userModel) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(this.secret);
             return JWT.create()

@@ -1,7 +1,7 @@
 package com.thenriquedb.products_api.controllers;
 
 import com.thenriquedb.products_api.dtos.ProductRecordDto;
-import com.thenriquedb.products_api.models.ProductModel;
+import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
-        ProductModel createdProduct = this.productService.createProduct(productRecordDto);
+    public ResponseEntity<Product> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
+        Product createdProduct = this.productService.createProduct(productRecordDto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -27,14 +27,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductModel>> listAllProducts() {
-        List<ProductModel> products = this.productService.listAllProducts();
+    public ResponseEntity<List<Product>> listAllProducts() {
+        List<Product> products = this.productService.listAllProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable("id") UUID id) {
-        ProductModel product = this.productService.getProductById(id);
+        Product product = this.productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 

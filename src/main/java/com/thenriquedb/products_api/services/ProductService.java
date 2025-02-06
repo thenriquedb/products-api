@@ -3,7 +3,7 @@ package com.thenriquedb.products_api.services;
 import com.thenriquedb.products_api.controllers.ProductController;
 import com.thenriquedb.products_api.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.execptions.ProductNotFoundExecption;
-import com.thenriquedb.products_api.models.ProductModel;
+import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductModel> listAllProducts() {
-        List<ProductModel> products = this.productRepository.findAll();
+    public List<Product> listAllProducts() {
+        List<Product> products = this.productRepository.findAll();
 
         if(!products.isEmpty()) {
-            for(ProductModel product : products) {
+            for(Product product : products) {
                 UUID id = product.getId();
                 Link link = linkTo(methodOn(ProductController.class).getById(id)).withSelfRel();
                 product.add(link);
@@ -36,8 +36,8 @@ public class ProductService {
         return products;
     }
 
-    public ProductModel getProductById(UUID id) throws ProductNotFoundExecption {
-        Optional<ProductModel> product = productRepository.findById(id);
+    public Product getProductById(UUID id) throws ProductNotFoundExecption {
+        Optional<Product> product = productRepository.findById(id);
 
         if(product.isEmpty()) {
             throw new ProductNotFoundExecption(id);
@@ -49,14 +49,14 @@ public class ProductService {
         return product.get();
     }
 
-    public ProductModel createProduct(ProductRecordDto productRecordDto) {
-        var productModel  = new ProductModel();
+    public Product createProduct(ProductRecordDto productRecordDto) {
+        var productModel  = new Product();
         BeanUtils.copyProperties(productRecordDto, productModel);
         return productRepository.save(productModel);
     }
 
-    public ProductModel updateProduct(UUID id, ProductRecordDto productRecordDto) throws ProductNotFoundExecption {
-        Optional<ProductModel> product = this.productRepository.findById(id);
+    public Product updateProduct(UUID id, ProductRecordDto productRecordDto) throws ProductNotFoundExecption {
+        Optional<Product> product = this.productRepository.findById(id);
         if(product.isEmpty()) {
             throw new ProductNotFoundExecption(id);
         }
@@ -68,7 +68,7 @@ public class ProductService {
     }
 
     public void deleteProduct(UUID id) throws ProductNotFoundExecption {
-        Optional<ProductModel> product = productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
         if(product.isEmpty()) {
             throw new ProductNotFoundExecption(id);
         }

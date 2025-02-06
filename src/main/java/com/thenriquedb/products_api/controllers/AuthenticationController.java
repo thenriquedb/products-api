@@ -4,7 +4,7 @@ import com.thenriquedb.products_api.dtos.AuthenticationRecordDto;
 import com.thenriquedb.products_api.dtos.LoginRecordResponseDto;
 import com.thenriquedb.products_api.dtos.RegisterRecordDto;
 import com.thenriquedb.products_api.infra.security.TokenService;
-import com.thenriquedb.products_api.models.UserModel;
+import com.thenriquedb.products_api.domain.User;
 import com.thenriquedb.products_api.services.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationRecordDto.login(), authenticationRecordDto.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((UserModel) auth.getPrincipal());
+        var token = tokenService.generateToken((User) auth.getPrincipal());
 
         return ResponseEntity.ok(new LoginRecordResponseDto(token));
     }

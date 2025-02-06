@@ -1,7 +1,6 @@
-package com.thenriquedb.products_api.models;
+package com.thenriquedb.products_api.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "product")
-public class ProductModel extends RepresentationModel<ProductModel> implements Serializable {
+public class Product extends RepresentationModel<Product> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
