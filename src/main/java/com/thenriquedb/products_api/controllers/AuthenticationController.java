@@ -30,7 +30,7 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "401", description = "Credentials invalid")
     @ApiResponse(responseCode = "403", description = "Credentials invalid")
     public ResponseEntity login(@RequestBody @Valid AuthenticationRecordDto authenticationRecordDto) {
-        var token = this.authenticationService.login();
+        var token = this.authenticationService.login(authenticationRecordDto.login(), authenticationRecordDto.password());
         return ResponseEntity.ok(new LoginRecordResponseDto(token));
     }
 
