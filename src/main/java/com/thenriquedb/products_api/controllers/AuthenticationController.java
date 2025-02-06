@@ -6,6 +6,9 @@ import com.thenriquedb.products_api.dtos.RegisterRecordDto;
 import com.thenriquedb.products_api.infra.security.TokenService;
 import com.thenriquedb.products_api.domain.User;
 import com.thenriquedb.products_api.services.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Authentication operations")
 public class AuthenticationController {
 
     @Autowired
@@ -30,6 +34,10 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
+    @Operation(summary = "Login")
+    @ApiResponse(responseCode = "200", description = "Login successful")
+    @ApiResponse(responseCode = "401", description = "Credentials invalid")
+    @ApiResponse(responseCode = "403", description = "Credentials invalid")
     public ResponseEntity login(@RequestBody @Valid AuthenticationRecordDto authenticationRecordDto) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationRecordDto.login(), authenticationRecordDto.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
@@ -40,6 +48,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new user")
+    @ApiResponse(responseCode = "200", description = "User registered")
+    @ApiResponse(responseCode = "409", description = "User already exists")
+    @ApiResponse(responseCode = "400", description = "Invalid data")
     public ResponseEntity register(@RequestBody @Valid RegisterRecordDto registerRecordDto) {
         authenticationService.register(
                 registerRecordDto.name(),
