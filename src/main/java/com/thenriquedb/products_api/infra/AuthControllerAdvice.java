@@ -1,8 +1,8 @@
 package com.thenriquedb.products_api.infra;
 
 
-import com.thenriquedb.products_api.execptions.ApiErrorMessage;
-import com.thenriquedb.products_api.execptions.UserAlreadyExistsException;
+import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
+import com.thenriquedb.products_api.infra.execptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

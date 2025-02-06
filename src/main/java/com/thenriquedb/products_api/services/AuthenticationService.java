@@ -1,9 +1,10 @@
 package com.thenriquedb.products_api.services;
 
 
-import com.thenriquedb.products_api.execptions.UserAlreadyExistsException;
+import com.thenriquedb.products_api.infra.execptions.UserAlreadyExistsException;
 import com.thenriquedb.products_api.domain.User;
 import com.thenriquedb.products_api.domain.UserRole;
+import com.thenriquedb.products_api.infra.security.TokenService;
 import com.thenriquedb.products_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,9 +24,14 @@ public class AuthenticationService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public void login(String login, String password) {
+    @Autowired
+    TokenService tokenService;
+
+    public String login(String login, String password) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(login, password);
-        var auth = authenticationManager.authenticate(usernamePassword);
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        return tokenService.generateToken((User) auth.getPrincipal());
     }
 
     public User register(String name, String login, String password, UserRole role) {

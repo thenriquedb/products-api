@@ -1,7 +1,7 @@
 package com.thenriquedb.products_api.infra;
 
-import com.thenriquedb.products_api.execptions.ApiErrorMessage;
-import com.thenriquedb.products_api.execptions.ProductNotFoundExecption;
+import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
+import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

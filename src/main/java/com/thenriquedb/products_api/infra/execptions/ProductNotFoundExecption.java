@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.execptions;
+package com.thenriquedb.products_api.infra.execptions;
 
 import lombok.Getter;
 import java.util.UUID;

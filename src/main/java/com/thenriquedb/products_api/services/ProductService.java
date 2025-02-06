@@ -2,7 +2,7 @@ package com.thenriquedb.products_api.services;
 
 import com.thenriquedb.products_api.controllers.ProductController;
 import com.thenriquedb.products_api.dtos.ProductRecordDto;
-import com.thenriquedb.products_api.execptions.ProductNotFoundExecption;
+import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
