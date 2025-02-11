@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.validation;
+package com.thenriquedb.products_api.infra.validation;
 
 
 import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
