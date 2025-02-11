@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.infra;
+package com.thenriquedb.products_api.validation;
 
 import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
@@ -13,8 +13,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ProductControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ProductNotFoundExecption.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiErrorMessage> handleProductNotFoundExecption(ProductNotFoundExecption execption) {
-        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.NOT_FOUND, execption.getMessage());
+    public ResponseEntity<ApiErrorMessage> handleProductNotFoundExecption(ProductNotFoundExecption exception) {
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getHttpStatus(), exception.getMessage());
         return ResponseEntity.status(apiErrorMessage.getStatus()).body(apiErrorMessage);
     }
 }
