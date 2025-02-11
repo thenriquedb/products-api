@@ -1,11 +1,16 @@
 package com.thenriquedb.products_api.infra.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
+import com.thenriquedb.products_api.infra.execptions.InvalidSessionTokenException;
 import com.thenriquedb.products_api.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,17 +29,27 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getToken(request);
+        try {
+            String token = getToken(request);
 
-        if(token != null) {
-            String username = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByLogin(username);
+            if(token == null) {
+                throw new InvalidSessionTokenException();
+            }
 
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder .getContext().setAuthentication(authentication);
+            if(token != null) {
+                String username = tokenService.validateToken(token);
+                UserDetails user = userRepository.findByLogin(username);
+
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder .getContext().setAuthentication(authentication);
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (InvalidSessionTokenException exception) {
+            ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getHttpStatus(), exception.getMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(convertObjectToJson(apiErrorMessage));
         }
-
-        filterChain.doFilter(request, response);
     }
 
     public String getToken(HttpServletRequest request) {
@@ -43,5 +58,14 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(authHeader == null) return null;
 
         return authHeader.replace("Bearer ", "");
+    }
+
+    private String convertObjectToJson(Object object) throws JsonProcessingException {
+        if (object == null) {
+            return null;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 }
