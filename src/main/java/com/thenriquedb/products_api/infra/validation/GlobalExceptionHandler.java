@@ -1,6 +1,7 @@
 package com.thenriquedb.products_api.infra.validation;
 
 import com.thenriquedb.products_api.infra.execptions.ApiErrorMessage;
+import com.thenriquedb.products_api.infra.execptions.BaseException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -31,5 +32,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
 
         return ResponseEntity.badRequest().body(new ApiErrorMessage(HttpStatus.BAD_REQUEST, "Validation error", errors));
+    }
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ApiErrorMessage> handleCustomExceptions(BaseException exception) {
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(exception.getHttpStatus(), exception.getMessage());
+        return ResponseEntity.status(apiErrorMessage.getStatus()).body(apiErrorMessage);
     }
 }

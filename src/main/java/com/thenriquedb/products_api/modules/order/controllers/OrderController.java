@@ -8,6 +8,7 @@ import com.thenriquedb.products_api.modules.order.dtos.CreateOrderResponse;
 import com.thenriquedb.products_api.modules.order.services.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -35,7 +37,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CreateOrderResponse>> getOrders(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<CreateOrderResponse>> listOrders(@AuthenticationPrincipal User user) {
         List<Order> orders = orderService.listAllOrdersFromUser(user);
         List<CreateOrderResponse> response = new ArrayList<>();
 
@@ -47,5 +49,10 @@ public class OrderController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrder(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(orderService.getById(id));
     }
 }

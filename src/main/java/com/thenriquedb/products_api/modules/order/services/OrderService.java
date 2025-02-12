@@ -4,6 +4,7 @@ import com.thenriquedb.products_api.domain.Order;
 import com.thenriquedb.products_api.domain.OrderItem;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.domain.User;
+import com.thenriquedb.products_api.infra.execptions.OrderNotFoundException;
 import com.thenriquedb.products_api.modules.order.dtos.CreateOrderProductDto;
 import com.thenriquedb.products_api.infra.execptions.CreateOrderException;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
@@ -56,5 +57,15 @@ public class OrderService {
 
     public List<Order> listAllOrdersFromUser(User user) {
         return orderRepository.findAllByUserId(user.getId());
+    }
+
+    public Order getById(UUID id) {
+      Optional<Order> order = orderRepository.findById(id);
+
+      if(order.isEmpty()) {
+        throw new OrderNotFoundException(id);
+      }
+
+      return order.get();
     }
 }
