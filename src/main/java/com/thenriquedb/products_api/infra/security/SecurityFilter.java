@@ -32,10 +32,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         try {
             String token = getToken(request);
 
-            if(token == null) {
-                throw new InvalidSessionTokenException();
-            }
-
             if(token != null) {
                 String username = tokenService.validateToken(token);
                 UserDetails user = userRepository.findByLogin(username);

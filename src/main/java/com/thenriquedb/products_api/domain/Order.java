@@ -1,22 +1,24 @@
 package com.thenriquedb.products_api.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
+
 @Entity
-@Table(name = "products")
+@Table(name = "orders")
 @Getter
 @Setter
-public class Product extends RepresentationModel<Product> implements Serializable {
+public class Order implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,9 +26,14 @@ public class Product extends RepresentationModel<Product> implements Serializabl
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private BigDecimal value;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItem> items;
+
+    private BigDecimal total;
 
     @CreationTimestamp
     private Instant createdAt;

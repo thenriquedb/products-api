@@ -1,5 +1,6 @@
 package com.thenriquedb.products_api.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class User implements UserDetails {
     private UUID id;
 
     @CreationTimestamp
-    private Instant createdDate;
+    private Instant createdAt;
 
     @UpdateTimestamp
     private Instant updatedAt;

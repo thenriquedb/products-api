@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.hateoas.RepresentationModel;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,10 +13,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "products")
+@Table(name = "order_items")
 @Getter
 @Setter
-public class Product extends RepresentationModel<Product> implements Serializable {
+public class OrderItem implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,13 +24,25 @@ public class Product extends RepresentationModel<Product> implements Serializabl
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    private BigDecimal value;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    private BigDecimal subtotal;
+
+    private Integer quantity;
 
     @CreationTimestamp
     private Instant createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private Instant updatedAt;
+
+    public void calculateSubtotal() {
+        this.subtotal = this.product.getValue().multiply(BigDecimal.valueOf(this.quantity));
+    }
 }
