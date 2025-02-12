@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -40,4 +43,10 @@ public class Order implements Serializable {
 
     @CreationTimestamp
     private Instant updatedAt;
+
+    public void calculateTotal() {
+        this.total = this.items.stream()
+                .map(OrderItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
