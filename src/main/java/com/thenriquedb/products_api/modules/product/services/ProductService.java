@@ -1,7 +1,7 @@
-package com.thenriquedb.products_api.services;
+package com.thenriquedb.products_api.modules.product.services;
 
-import com.thenriquedb.products_api.controllers.ProductController;
-import com.thenriquedb.products_api.dtos.ProductRecordDto;
+import com.thenriquedb.products_api.modules.product.controllers.ProductController;
+import com.thenriquedb.products_api.modules.product.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.repositories.ProductRepository;

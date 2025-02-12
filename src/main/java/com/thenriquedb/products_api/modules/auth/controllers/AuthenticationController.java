@@ -1,9 +1,9 @@
-package com.thenriquedb.products_api.controllers;
+package com.thenriquedb.products_api.modules.auth.controllers;
 
-import com.thenriquedb.products_api.dtos.AuthenticationRecordDto;
-import com.thenriquedb.products_api.dtos.LoginRecordResponseDto;
-import com.thenriquedb.products_api.dtos.RegisterRecordDto;
-import com.thenriquedb.products_api.services.AuthenticationService;
+import com.thenriquedb.products_api.modules.auth.dtos.AuthenticationRecordDto;
+import com.thenriquedb.products_api.modules.auth.dtos.LoginRecordResponseDto;
+import com.thenriquedb.products_api.modules.auth.dtos.RegisterRecordDto;
+import com.thenriquedb.products_api.modules.auth.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

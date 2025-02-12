@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.services;
+package com.thenriquedb.products_api.modules.auth.services;
 
 
 import com.thenriquedb.products_api.infra.execptions.UserAlreadyExistsException;

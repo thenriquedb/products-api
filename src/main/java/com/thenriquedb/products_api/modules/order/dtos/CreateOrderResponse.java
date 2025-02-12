@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.dtos;
+package com.thenriquedb.products_api.modules.order.dtos;
 
 import com.thenriquedb.products_api.domain.OrderItem;
 import lombok.Getter;

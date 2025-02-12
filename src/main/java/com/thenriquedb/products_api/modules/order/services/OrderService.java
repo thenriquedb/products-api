@@ -1,11 +1,10 @@
-package com.thenriquedb.products_api.services;
+package com.thenriquedb.products_api.modules.order.services;
 
 import com.thenriquedb.products_api.domain.Order;
 import com.thenriquedb.products_api.domain.OrderItem;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.domain.User;
-import com.thenriquedb.products_api.dtos.CreateOrderProductDto;
-import com.thenriquedb.products_api.dtos.CreateOrderRequestDto;
+import com.thenriquedb.products_api.modules.order.dtos.CreateOrderProductDto;
 import com.thenriquedb.products_api.infra.execptions.CreateOrderException;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
 import com.thenriquedb.products_api.repositories.OrderRepository;

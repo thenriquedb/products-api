@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.dtos;
+package com.thenriquedb.products_api.modules.auth.dtos;
 
 import jakarta.validation.constraints.NotEmpty;
 

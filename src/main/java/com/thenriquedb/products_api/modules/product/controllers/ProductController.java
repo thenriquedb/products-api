@@ -1,9 +1,9 @@
-package com.thenriquedb.products_api.controllers;
+package com.thenriquedb.products_api.modules.product.controllers;
 
 import com.thenriquedb.products_api.configurations.SecurityConfiguration;
-import com.thenriquedb.products_api.dtos.ProductRecordDto;
+import com.thenriquedb.products_api.modules.product.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.domain.Product;
-import com.thenriquedb.products_api.services.ProductService;
+import com.thenriquedb.products_api.modules.product.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -1,4 +1,4 @@
-package com.thenriquedb.products_api.dtos;
+package com.thenriquedb.products_api.modules.product.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
