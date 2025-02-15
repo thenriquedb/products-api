@@ -2,6 +2,7 @@ package com.thenriquedb.products_api.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Table(name = "order_items")
 @Getter
 @Setter
+@NoArgsConstructor
 public class OrderItem implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -41,6 +43,19 @@ public class OrderItem implements Serializable {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    public OrderItem(Product product, Integer quantity) {
+        this.product = product;
+        this.quantity = quantity;
+        this.calculateSubtotal();
+    }
+
+    public OrderItem(Product product, Integer quantity,Order order) {
+        this.product = product;
+        this.quantity = quantity;
+        this.order = order;
+        this.calculateSubtotal();
+    }
 
     public void calculateSubtotal() {
         this.subtotal = this.product.getValue().multiply(BigDecimal.valueOf(this.quantity));
