@@ -152,15 +152,11 @@ class ProductServiceTest {
         BeanUtils.copyProperties(productRecordDto, product);
         product.setId(UUID.randomUUID());
 
-        when(productRepository.save(product)).thenReturn(product);
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
         doNothing().when(productRepository).deleteById(product.getId());
 
-        Product createdProduct = productService.createProduct(productRecordDto);
-
-        productService.deleteProduct(createdProduct.getId());
         assertDoesNotThrow(() -> productService.deleteProduct(product.getId()));
-        verify(productRepository).deleteById(createdProduct.getId());
+        verify(productRepository).deleteById(product.getId());
     }
 
     @Test
