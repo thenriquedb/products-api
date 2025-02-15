@@ -65,6 +65,7 @@ class ProductServiceTest {
     @Test
     void listAllProducts_empty() {
         when(productRepository.findAll()).thenReturn(List.of());
+
         List<Product> products = productService.listAllProducts();
         assertThat(products.size()).isEqualTo(0);
     }
@@ -84,13 +85,16 @@ class ProductServiceTest {
         Product findedProduct = productService.getProductById(createdProduct.getId());
 
         assertThat(findedProduct.getId()).isEqualTo(createdProduct.getId());
+        verify(productRepository).findById(createdProduct.getId());
     }
 
     @Test
     void getProductById_throwsProductNotFoundExecption() {
         UUID id = UUID.randomUUID();
         when(productRepository.findById(id)).thenReturn(Optional.empty());
+
         assertThrows(ProductNotFoundExecption.class, () -> productService.getProductById(id));
+        verify(productRepository).findById(id);
     }
     @Test
     void createProduct_success() {
@@ -107,6 +111,7 @@ class ProductServiceTest {
         Product findedProduct = productRepository.findById(createdProduct.getId()).get();
 
         assertThat(findedProduct.getId()).isEqualTo(createdProduct.getId());
+        verify(productRepository).save(product);
     }
 
     @Test
@@ -155,12 +160,14 @@ class ProductServiceTest {
 
         productService.deleteProduct(createdProduct.getId());
         assertDoesNotThrow(() -> productService.deleteProduct(product.getId()));
+        verify(productRepository).deleteById(createdProduct.getId());
     }
 
     @Test
     void deleteProduct_throwsProductNotFoundExecption() {
         UUID id = UUID.randomUUID();
         when(productRepository.findById(id)).thenReturn(Optional.empty());
+
         assertThrows(ProductNotFoundExecption.class, () -> productService.deleteProduct(id));
     }
 
