@@ -1,7 +1,9 @@
 package com.thenriquedb.products_api.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.hateoas.RepresentationModel;
@@ -16,6 +18,8 @@ import java.util.UUID;
 @Table(name = "products")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product extends RepresentationModel<Product> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
