@@ -36,11 +36,7 @@ public class OrderService {
                     throw new ProductNotFoundExecption(productDto.productId());
                 }
 
-                OrderItem orderItem = new OrderItem();
-                orderItem.setProduct(product);
-                orderItem.setQuantity(productDto.quantity());
-                orderItem.setOrder(order);
-                orderItem.calculateSubtotal();
+                OrderItem orderItem = new OrderItem(product, productDto.quantity(), order);
 
                 orderItems.add(orderItem);
             }
@@ -51,7 +47,7 @@ public class OrderService {
 
             return orderRepository.save(order);
         } catch (ProductNotFoundExecption e) {
-            throw new CreateOrderException("Error creating order");
+            throw new CreateOrderException("Error creating order. One of the products was not found.");
         }
     }
 
