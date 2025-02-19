@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class InvalidSessionTokenException extends BaseException {
+public class InvalidSessionTokenException extends BusinessException {
     public InvalidSessionTokenException() {
         super("Invalid session token", HttpStatus.UNAUTHORIZED);
     }

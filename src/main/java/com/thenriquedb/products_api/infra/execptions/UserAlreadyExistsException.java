@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class UserAlreadyExistsException extends BaseException{
+public class UserAlreadyExistsException extends BusinessException {
     private final String login;
 
     public UserAlreadyExistsException(String login){
