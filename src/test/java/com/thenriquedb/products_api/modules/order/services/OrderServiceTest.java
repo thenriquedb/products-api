@@ -73,6 +73,24 @@ class OrderServiceTest {
     }
 
     @Test
+    void createOrder_duplicatedProduct() {
+        Product product = new Product(UUID.randomUUID(), "Product", new BigDecimal(100), null, null);
+        product.setId(UUID.randomUUID());
+
+        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
+
+        assertThrows(CreateOrderException.class, () -> {
+            orderService.createOrder(
+                    new User(),
+                    List.of(
+                            new CreateOrderProductDto(product.getId(), 1),
+                            new CreateOrderProductDto(product.getId(), 2)
+                    )
+            );
+        });
+    }
+
+    @Test
     void createOrder_productNotFound() {
         when(productRepository.findById(any())).thenReturn(Optional.empty());
 

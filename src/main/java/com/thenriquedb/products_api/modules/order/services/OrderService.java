@@ -27,10 +27,16 @@ public class OrderService {
     public Order createOrder(User user, List<CreateOrderProductDto> productsDto) {
         try {
             List<OrderItem> orderItems = new ArrayList<OrderItem>();
+            Set<UUID> productIds = new HashSet<>();
+
             Order order = new Order();
 
             for (CreateOrderProductDto productDto : productsDto) {
                 Product product = productRepository.findById(productDto.productId()).orElse(null);
+
+                if(!productIds.add(productDto.productId())) {
+                    throw new CreateOrderException("Error creating order. Duplicated product.");
+                }
 
                 if (product == null) {
                     throw new ProductNotFoundExecption(productDto.productId());
