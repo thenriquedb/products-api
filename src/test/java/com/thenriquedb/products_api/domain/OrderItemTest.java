@@ -12,7 +12,7 @@ class OrderItemTest {
     void orderItem_calculateSubtotal() {
         OrderItem orderItem = new OrderItem();
         Product product = new Product();
-        product.setValue(BigDecimal.valueOf(10));
+        product.setPrice(BigDecimal.valueOf(10));
         orderItem.setProduct(product);
         orderItem.setQuantity(5);
 
