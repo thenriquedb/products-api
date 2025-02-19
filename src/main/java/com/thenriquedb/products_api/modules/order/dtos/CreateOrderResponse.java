@@ -22,7 +22,7 @@ public class CreateOrderResponse {
         this.items
                 .add(new OrderItemDto(
                         orderItem.getProduct().getId().toString(),
-                        orderItem.getProduct().getValue(),
+                        orderItem.getProduct().getPrice(),
                         orderItem.getQuantity(),
                         orderItem.getSubtotal())
                 );

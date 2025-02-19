@@ -58,6 +58,6 @@ public class OrderItem implements Serializable {
     }
 
     public void calculateSubtotal() {
-        this.subtotal = this.product.getValue().multiply(BigDecimal.valueOf(this.quantity));
+        this.subtotal = this.product.getPrice().multiply(BigDecimal.valueOf(this.quantity));
     }
 }

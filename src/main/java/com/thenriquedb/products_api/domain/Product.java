@@ -30,7 +30,7 @@ public class Product extends RepresentationModel<Product> implements Serializabl
 
     private String name;
 
-    private BigDecimal value;
+    private BigDecimal price;
 
     @CreationTimestamp
     private Instant createdAt;
