@@ -132,7 +132,7 @@ class ProductServiceTest {
 
         assertThat(createdProduct.getId()).isEqualTo(updatedProduct.getId());
         assertThat(updatedProduct.getName()).isEqualTo(updatedProductRecordDto.name());
-        assertThat(updatedProduct.getValue()).isEqualTo(updatedProductRecordDto.value());
+        assertThat(updatedProduct.getPrice()).isEqualTo(updatedProductRecordDto.price());
     }
 
     @Test
