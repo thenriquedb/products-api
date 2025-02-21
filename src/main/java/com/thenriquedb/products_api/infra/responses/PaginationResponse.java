@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class PaginationResponse<T> {
-    private List<T> data;
+    private List<T> data = List.of();
     private int pageNumber;
     private int pageSize;
     private long totalElements;

@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public class ProductService {
         );
 
         if(!products.isEmpty()) {
-            for(Product product : products) {
+            for(Product product : products.getContent()) {
                 UUID id = product.getId();
                 Link link = linkTo(methodOn(ProductController.class).getById(id)).withSelfRel();
                 product.add(link);
@@ -57,7 +56,7 @@ public class ProductService {
             throw new ProductNotFoundExecption(id);
         }
 
-//        Link link = linkTo(methodOn(ProductController.class).listAllProducts(0,10,Sort.by())).withSelfRel();
+//        Link link = linkTo(methodOn(ProductController.class).listAllProducts(0,10,"createdAt", true).withSelfRel();
 //        product.get().add(link);
 
         return product.get();

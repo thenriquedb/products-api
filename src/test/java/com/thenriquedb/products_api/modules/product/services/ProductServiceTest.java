@@ -2,6 +2,7 @@ package com.thenriquedb.products_api.modules.product.services;
 
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
+import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.product.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
@@ -21,6 +26,8 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+
 
 @ExtendWith(SpringExtension.class)
 class ProductServiceTest {
@@ -39,7 +46,6 @@ class ProductServiceTest {
     void listAllProducts_success() {
         ProductRecordDto productRecordDto1 = new ProductRecordDto("Product 1", new BigDecimal("10.00"));
         ProductRecordDto productRecordDto2 = new ProductRecordDto("Product 2", new BigDecimal("20.00"));
-        ProductRecordDto productRecordDto3 = new ProductRecordDto("Product 3", new BigDecimal("20.00"));
 
         Product product1 = new Product();
         BeanUtils.copyProperties(productRecordDto1, product1);
@@ -49,25 +55,29 @@ class ProductServiceTest {
         BeanUtils.copyProperties(productRecordDto2, product2);
         product2.setId(UUID.randomUUID());
 
-        Product product3 = new Product();
-        BeanUtils.copyProperties(productRecordDto3, product3);
-        product3.setId(UUID.randomUUID());
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by("createdAt").ascending());
 
-        when(productRepository.save(product1)).thenReturn(product1);
-        when(productRepository.save(product2)).thenReturn(product2);
-        when(productRepository.save(product3)).thenReturn(product3);
-        when(productRepository.findAll()).thenReturn(List.of(product1, product2, product3));
+        when(productRepository
+                .findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(product1, product2)));
 
-        List<Product> products = productService.listAllProducts();
-        assertThat(products.size()).isEqualTo(3);
+//
+//        when(productRepository
+//                .findAll(pageRequest))
+//                .thenReturn(new PageImpl<>(List.of(product1, product2)));
+
+        PaginationResponse<Product> products = productService.listAllProducts(0,10,"createdAt", true);
+        assertThat(products.getData().size()).isEqualTo(2);
     }
 
     @Test
     void listAllProducts_empty() {
-        when(productRepository.findAll()).thenReturn(List.of());
+                when(productRepository
+                .findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of()));
 
-        List<Product> products = productService.listAllProducts();
-        assertThat(products.size()).isEqualTo(0);
+        PaginationResponse<Product> products = productService.listAllProducts(0,10,"createdAt", true);
+        assertThat(products.getData().size()).isEqualTo(0);
     }
 
     @Test
