@@ -1,5 +1,6 @@
 package com.thenriquedb.products_api.modules.product.services;
 
+import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.product.controllers.ProductController;
 import com.thenriquedb.products_api.modules.product.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
@@ -7,6 +8,9 @@ import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +26,12 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> listAllProducts() {
-        List<Product> products = this.productRepository.findAll();
+    public PaginationResponse<Product> listAllProducts(int pageNumber, int pageSize, String sortBy, boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Page<Product> products = this.productRepository.findAll(
+                PageRequest.of(pageNumber, pageSize, sort)
+        );
 
         if(!products.isEmpty()) {
             for(Product product : products) {
@@ -33,7 +41,13 @@ public class ProductService {
             }
         }
 
-        return products;
+        return new PaginationResponse<Product>(
+                products.getContent(),
+                products.getNumber(),
+                products.getSize(),
+                products.getTotalElements(),
+                products.getTotalPages()
+        );
     }
 
     public Product getProductById(UUID id) throws ProductNotFoundExecption {
@@ -43,8 +57,8 @@ public class ProductService {
             throw new ProductNotFoundExecption(id);
         }
 
-        Link link = linkTo(methodOn(ProductController.class).listAllProducts()).withSelfRel();
-        product.get().add(link);
+//        Link link = linkTo(methodOn(ProductController.class).listAllProducts(0,10,Sort.by())).withSelfRel();
+//        product.get().add(link);
 
         return product.get();
     }

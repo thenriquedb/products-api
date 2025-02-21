@@ -1,6 +1,7 @@
 package com.thenriquedb.products_api.modules.product.controllers;
 
 import com.thenriquedb.products_api.configurations.SecurityConfiguration;
+import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.product.dtos.ProductRecordDto;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.modules.product.services.ProductService;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +39,12 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "List all products")
-    public ResponseEntity<List<Product>> listAllProducts() {
-        List<Product> products = this.productService.listAllProducts();
-        return ResponseEntity.ok(products);
+    public ResponseEntity<PaginationResponse<Product>> listAllProducts(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
+                                                         @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                                                         @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                                                         @RequestParam(value = "ascending", defaultValue = "true") boolean ascending) {
+        PaginationResponse<Product> response = this.productService.listAllProducts(pageNumber, pageSize, sortBy, ascending);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
