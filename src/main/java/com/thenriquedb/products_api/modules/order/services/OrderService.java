@@ -5,12 +5,16 @@ import com.thenriquedb.products_api.domain.OrderItem;
 import com.thenriquedb.products_api.domain.Product;
 import com.thenriquedb.products_api.domain.User;
 import com.thenriquedb.products_api.infra.execptions.OrderNotFoundException;
+import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.order.dtos.CreateOrderProductDto;
 import com.thenriquedb.products_api.infra.execptions.CreateOrderException;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
 import com.thenriquedb.products_api.repositories.OrderRepository;
 import com.thenriquedb.products_api.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
@@ -57,8 +61,21 @@ public class OrderService {
         }
     }
 
-    public List<Order> listAllOrdersFromUser(User user) {
-        return orderRepository.findAllByUserId(user.getId());
+    public PaginationResponse<Order> listAllOrdersFromUser(User user, int pageNumber, int pageSize, String sortBy, boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Page<Order> orders = orderRepository.findAllByUserId(
+                user.getId(),
+                PageRequest.of(pageNumber, pageSize,sort)
+        );
+
+        return new PaginationResponse<>(
+                orders.getContent(),
+                orders.getNumber(),
+                orders.getSize(),
+                orders.getTotalElements(),
+                orders.getTotalPages()
+        );
     }
 
     public Order getById(UUID id) {

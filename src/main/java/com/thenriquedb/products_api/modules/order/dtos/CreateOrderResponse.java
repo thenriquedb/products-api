@@ -3,6 +3,7 @@ package com.thenriquedb.products_api.modules.order.dtos;
 import com.thenriquedb.products_api.domain.Order;
 import com.thenriquedb.products_api.domain.OrderItem;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CreateOrderResponse {
     private BigDecimal total;
     private List<OrderItemDto> items = new ArrayList<>();
@@ -26,6 +28,11 @@ public class CreateOrderResponse {
                         orderItem.getQuantity(),
                         orderItem.getSubtotal())
                 );
+    }
+
+    public CreateOrderResponse(Order order) {
+        BeanUtils.copyProperties(order, this);
+        order.getItems().forEach(this::addItem);
     }
 
     public void fromOrder(Order order) {

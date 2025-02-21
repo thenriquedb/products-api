@@ -3,6 +3,7 @@ package com.thenriquedb.products_api.modules.order.controllers;
 import com.thenriquedb.products_api.configurations.SecurityConfiguration;
 import com.thenriquedb.products_api.domain.Order;
 import com.thenriquedb.products_api.domain.User;
+import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.order.dtos.CreateOrderRequestDto;
 import com.thenriquedb.products_api.modules.order.dtos.CreateOrderResponse;
 import com.thenriquedb.products_api.modules.order.services.OrderService;
@@ -42,18 +43,27 @@ public class OrderController {
 
     @GetMapping
     @Operation(summary = "List all orders")
-    public ResponseEntity<List<CreateOrderResponse>> listOrders(@AuthenticationPrincipal User user) {
-        List<Order> orders = orderService.listAllOrdersFromUser(user);
-        List<CreateOrderResponse> response = new ArrayList<>();
+    public ResponseEntity<PaginationResponse<CreateOrderResponse>> listOrders(@AuthenticationPrincipal User user,
+                                                                @RequestParam(value = "page", defaultValue = "0") int pageNumber,
+                                                                @RequestParam(value = "size", defaultValue = "10") int pageSize,
+                                                                @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                                                                @RequestParam(value = "ascending", defaultValue = "true") boolean ascending) {
+        PaginationResponse<Order> orders = orderService.listAllOrdersFromUser(user, pageNumber, pageSize, sortBy, ascending);
 
+        PaginationResponse<CreateOrderResponse> responseMapped = new PaginationResponse<>(
+                new ArrayList<>(),
+                orders.getPageNumber(),
+                orders.getPageSize(),
+                orders.getTotalElements(),
+                orders.getTotalPages()
+        );
 
-        for (Order order : orders) {
-            CreateOrderResponse createOrderResponse = new CreateOrderResponse();
-            createOrderResponse.fromOrder(order);
-            response.add(createOrderResponse);
-        }
+        orders.getData().forEach(order -> {
+            CreateOrderResponse createOrderResponse = new CreateOrderResponse(order);
+            responseMapped.add(createOrderResponse);
+        });
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responseMapped);
     }
 
     @GetMapping("/{id}")
