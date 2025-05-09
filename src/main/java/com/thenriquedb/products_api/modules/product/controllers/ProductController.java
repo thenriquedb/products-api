@@ -84,6 +84,8 @@ public class ProductController {
     }
 
     @GetMapping("/report")
+    @Operation(summary = "Generate a report of all products")
+    @ApiResponse(responseCode = "200", description = "Report generated")
     public ResponseEntity<Object> generateReport() throws IOException {
         String filePath = this.productService.generateReport();
 
