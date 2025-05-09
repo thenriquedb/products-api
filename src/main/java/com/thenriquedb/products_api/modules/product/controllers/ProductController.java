@@ -11,10 +11,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,4 +82,18 @@ public class ProductController {
         this.productService.deleteProduct(id);
         return ResponseEntity.ok(String.format("Product with id %s deleted", id));
     }
+
+    @GetMapping("/report")
+    public ResponseEntity<Object> generateReport() throws IOException {
+        String filePath = this.productService.generateReport();
+
+        File file = new File(filePath);
+        Path path = Paths.get(file.getAbsolutePath());
+        var resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(file.length())
+                .body(resource);    }
 }
