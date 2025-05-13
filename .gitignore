@@ -26,6 +26,7 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
+temp/jasper/**
 !**/src/main/**/build/
 !**/src/test/**/build/
 
