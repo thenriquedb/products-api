@@ -97,5 +97,6 @@ public class ProductController {
                 .ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .contentLength(file.length())
-                .body(resource);    }
+                .body(resource);
+    }
 }
