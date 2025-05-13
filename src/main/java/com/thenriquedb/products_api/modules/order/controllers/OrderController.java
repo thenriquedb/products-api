@@ -13,10 +13,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -72,5 +79,22 @@ public class OrderController {
     @ApiResponse(responseCode = "404", description = "Order not found")
     public ResponseEntity<Order> getOrder(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(orderService.getById(id));
+    }
+
+    @GetMapping("/report")
+    @Operation(summary = "Generate a report of all products")
+    @ApiResponse(responseCode = "200", description = "Report generated")
+    public ResponseEntity<Object> generateReport() throws IOException {
+        String filePath = this.orderService.generateReport();
+
+        File file = new File(filePath);
+        Path path = Paths.get(file.getAbsolutePath());
+        var resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(file.length())
+                .body(resource);
     }
 }

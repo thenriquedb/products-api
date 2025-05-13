@@ -9,14 +9,19 @@ import com.thenriquedb.products_api.infra.responses.PaginationResponse;
 import com.thenriquedb.products_api.modules.order.dtos.CreateOrderProductDto;
 import com.thenriquedb.products_api.infra.execptions.CreateOrderException;
 import com.thenriquedb.products_api.infra.execptions.ProductNotFoundExecption;
+import com.thenriquedb.products_api.modules.order.dtos.OrderReportLine;
 import com.thenriquedb.products_api.repositories.OrderRepository;
 import com.thenriquedb.products_api.repositories.ProductRepository;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+
 import java.util.*;
 
 @Service
@@ -26,6 +31,10 @@ public class OrderService {
 
     @Autowired
     ProductRepository productRepository;
+
+    public static final String REPORT_PATH = "classpath:jasper/templates/";
+    public static final String REPORT_NAME = "OrdersReport.jrxml";
+    public static final String REPORT_OUTPUT = "temp/jasper/outputs/";
 
     @Transactional
     public Order createOrder(User user, List<CreateOrderProductDto> productsDto) {
@@ -87,4 +96,37 @@ public class OrderService {
 
       return order.get();
     }
+
+    public String          generateReport() {
+        List<Order> orders = this.orderRepository.findAllByOrderByCreatedAtAsc();
+
+        var orderReportLines = orders.stream().map(order -> {
+            return new OrderReportLine(
+                order.getId().toString(),
+                order.getUser().getName(),
+                order.getTotal(),
+                Date.from(order.getCreatedAt())
+            );
+        }).toList();
+
+        try {
+            String reportPath = ResourceUtils.getFile(REPORT_PATH + REPORT_NAME).getAbsolutePath();
+
+            var datasource = new JRBeanCollectionDataSource(orderReportLines);
+            JasperReport jasper = JasperCompileManager.compileReport(reportPath);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, null, datasource);
+
+            String outputPath = ResourceUtils.getFile(REPORT_OUTPUT).getAbsolutePath();
+            String filename = "pedidos_" + System.currentTimeMillis();
+            String  fullPath = outputPath + "/" + filename + ".pdf";
+
+            JasperExportManager.exportReportToPdfFile(jasperPrint, fullPath);
+
+            return fullPath;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
 }
